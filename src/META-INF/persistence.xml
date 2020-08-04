@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="Proyecto5PU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>sv.bitlab.entidades.Planilla</class>
+    <class>sv.bitlab.entidades.SalSalario</class>
+    <class>sv.bitlab.entidades.Empleado</class>
+    <class>sv.bitlab.entidades.Sexo</class>
+    <class>sv.bitlab.entidades.Usuario</class>
+    <class>sv.bitlab.entidades.TipoUsuario</class>
+    <class>sv.bitlab.entidades.Estadocivil</class>
+    <class>sv.bitlab.entidades.EstadoEmpleado</class>
+    <class>sv.bitlab.entidades.Departamento</class>
+    <class>sv.bitlab.entidades.Cargo</class>
+    <class>sv.bitlab.entidades.EstadoDepartamento</class>
+    <class>sv.bitlab.entidades.Salario</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://104.154.219.217:3306/HRSYSTEM?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="bitlab"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="Bitlab123!"/>
+    </properties>
+  </persistence-unit>
+</persistence>
