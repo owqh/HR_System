@@ -48,7 +48,7 @@ public class Usuario implements Serializable {
     private String usrNombre;
     @Column(name = "USR_APELLIDO", length = 45)
     private String usrApellido;
-    @Column(name = "USR_CONTRASENA", length = 35)
+    @Column(name = "USR_CONTRASENA", length = 300)
     private String usrContrasena;
     @JoinColumn(name = "TIP_ID", referencedColumnName = "TIP_ID")
     @ManyToOne(fetch = FetchType.LAZY)
