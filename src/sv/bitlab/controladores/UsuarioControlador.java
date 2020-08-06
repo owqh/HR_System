@@ -6,6 +6,7 @@
 package sv.bitlab.controladores;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import sv.bitlab.conexion.Conexion;
 import sv.bitlab.entidades.Usuario;
 
@@ -17,6 +18,12 @@ public class UsuarioControlador extends ControladorAbstracto<Usuario> {
 
     public UsuarioControlador() {
         super(Usuario.class);
+    }
+    
+    public Usuario ObtenerUsuario(String usuario){
+        Query q = obtenerManejadorEntidades().createQuery("SELECT u FROM Usuario u WHERE u.usrAcceso = :usuario");
+        q.setParameter("usuario", usuario);
+        return (Usuario) q.getSingleResult();
     }
 
     @Override
