@@ -28,6 +28,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Planilla.findAll", query = "SELECT p FROM Planilla p"),
     @NamedQuery(name = "Planilla.findByPlaId", query = "SELECT p FROM Planilla p WHERE p.plaId = :plaId"),
+    @NamedQuery(name = "Planilla.findByPlaCodigo", query = "SELECT p FROM Planilla p WHERE p.plaCodigo = :plaCodigo"),
     @NamedQuery(name = "Planilla.findByPlaSalario", query = "SELECT p FROM Planilla p WHERE p.plaSalario = :plaSalario"),
     @NamedQuery(name = "Planilla.findByPlaHorasExtras", query = "SELECT p FROM Planilla p WHERE p.plaHorasExtras = :plaHorasExtras"),
     @NamedQuery(name = "Planilla.findByPlaAfpPatronal", query = "SELECT p FROM Planilla p WHERE p.plaAfpPatronal = :plaAfpPatronal"),
@@ -48,6 +49,9 @@ public class Planilla implements Serializable {
     @Basic(optional = false)
     @Column(name = "PLA_ID", nullable = false)
     private Integer plaId;
+    @Basic(optional = false)
+    @Column(name = "PLA_CODIGO", nullable = false, length = 6)
+    private String plaCodigo;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PLA_SALARIO", precision = 12, scale = 0)
     private Float plaSalario;
@@ -85,8 +89,9 @@ public class Planilla implements Serializable {
         this.plaId = plaId;
     }
 
-    public Planilla(Integer plaId, Date plaFechaInicio, Date plaFechaFin) {
+    public Planilla(Integer plaId, String plaCodigo, Date plaFechaInicio, Date plaFechaFin) {
         this.plaId = plaId;
+        this.plaCodigo = plaCodigo;
         this.plaFechaInicio = plaFechaInicio;
         this.plaFechaFin = plaFechaFin;
     }
@@ -97,6 +102,14 @@ public class Planilla implements Serializable {
 
     public void setPlaId(Integer plaId) {
         this.plaId = plaId;
+    }
+
+    public String getPlaCodigo() {
+        return plaCodigo;
+    }
+
+    public void setPlaCodigo(String plaCodigo) {
+        this.plaCodigo = plaCodigo;
     }
 
     public Float getPlaSalario() {
