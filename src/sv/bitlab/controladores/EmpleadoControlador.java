@@ -5,7 +5,9 @@
  */
 package sv.bitlab.controladores;
 
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import sv.bitlab.conexion.Conexion;
 import sv.bitlab.entidades.Empleado;
 
@@ -15,6 +17,23 @@ import sv.bitlab.entidades.Empleado;
  */
 public class EmpleadoControlador extends ControladorAbstracto<Empleado> {
 
+    public List<Empleado> EmpleadoPorEstado (String nombreEstado) throws Exception {
+        //funcion que retorna los cliente activos
+        EntityManager em = obtenerManejadorEntidades();
+        try {
+            Query q = em.createQuery("select c from Empleado c where c.eemId.eemNombre = :nombreEstado");
+            q.setParameter("nombreEstado", nombreEstado);
+            return q.getResultList();
+        } catch (Exception e) {
+            throw new Exception(e);
+        } finally {
+            if (em.isOpen()) {
+                em.close();
+            }
+        }
+    }
+    
+    
     public EmpleadoControlador() {
         super(Empleado.class);
     }
