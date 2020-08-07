@@ -71,8 +71,6 @@ public class Empleado implements Serializable {
     private Date empFechaContrato;
     @OneToMany(mappedBy = "empId", fetch = FetchType.LAZY)
     private List<SalSalario> salSalarioList;
-    @OneToMany(mappedBy = "empId", fetch = FetchType.LAZY)
-    private List<Planilla> planillaList;
     @JoinColumn(name = "CAR_ID", referencedColumnName = "CAR_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Cargo carId;
@@ -174,14 +172,6 @@ public class Empleado implements Serializable {
 
     public void setSalSalarioList(List<SalSalario> salSalarioList) {
         this.salSalarioList = salSalarioList;
-    }
-
-    public List<Planilla> getPlanillaList() {
-        return planillaList;
-    }
-
-    public void setPlanillaList(List<Planilla> planillaList) {
-        this.planillaList = planillaList;
     }
 
     public Cargo getCarId() {
