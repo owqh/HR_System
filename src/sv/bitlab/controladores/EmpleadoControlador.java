@@ -34,6 +34,22 @@ public class EmpleadoControlador extends ControladorAbstracto<Empleado> {
         }
     }
     
+    public List<Empleado> empleadoPlanilla () throws Exception {
+        //funcion que retorna los cliente activos
+        EntityManager em = obtenerManejadorEntidades();
+        try {
+            Query q = em.createQuery("select e from Empleado e where e.eemId.eemId = :valor ");
+            q.setParameter("valor", 1);
+            return q.getResultList();
+        } catch (Exception e) {
+            throw new Exception(e);
+        } finally {
+            if (em.isOpen()) {
+                em.close();
+            }
+        }
+    }
+    
     
     public EmpleadoControlador() {
         super(Empleado.class);

@@ -15,6 +15,7 @@
     <class>sv.bitlab.entidades.EstadoDepartamento</class>
     <class>sv.bitlab.entidades.Salario</class>
     <class>sv.bitlab.entidades.Configuracion</class>
+    <class>sv.bitlab.entidades.EstadoDep</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://104.154.219.217:3306/HRSYSTEM?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="bitlab"/>

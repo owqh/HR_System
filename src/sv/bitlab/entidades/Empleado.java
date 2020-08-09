@@ -42,7 +42,8 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "Empleado.findByEmpDui", query = "SELECT e FROM Empleado e WHERE e.empDui = :empDui"),
     @NamedQuery(name = "Empleado.findByEmpDireccion", query = "SELECT e FROM Empleado e WHERE e.empDireccion = :empDireccion"),
     @NamedQuery(name = "Empleado.findByEmpFechaNac", query = "SELECT e FROM Empleado e WHERE e.empFechaNac = :empFechaNac"),
-    @NamedQuery(name = "Empleado.findByEmpFechaContrato", query = "SELECT e FROM Empleado e WHERE e.empFechaContrato = :empFechaContrato")})
+    @NamedQuery(name = "Empleado.findByEmpFechaContrato", query = "SELECT e FROM Empleado e WHERE e.empFechaContrato = :empFechaContrato"),
+    @NamedQuery(name = "Empleado.findByEmpSalario", query = "SELECT e FROM Empleado e WHERE e.empSalario = :empSalario")})
 public class Empleado implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,8 +70,13 @@ public class Empleado implements Serializable {
     @Column(name = "EMP_FECHA_CONTRATO")
     @Temporal(TemporalType.DATE)
     private Date empFechaContrato;
+    @Basic(optional = false)
+    @Column(name = "EMP_SALARIO", nullable = false)
+    private float empSalario;
     @OneToMany(mappedBy = "empId", fetch = FetchType.LAZY)
     private List<SalSalario> salSalarioList;
+    @OneToMany(mappedBy = "empId", fetch = FetchType.LAZY)
+    private List<Planilla> planillaList;
     @JoinColumn(name = "CAR_ID", referencedColumnName = "CAR_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Cargo carId;
@@ -92,6 +98,11 @@ public class Empleado implements Serializable {
 
     public Empleado(Integer empId) {
         this.empId = empId;
+    }
+
+    public Empleado(Integer empId, float empSalario) {
+        this.empId = empId;
+        this.empSalario = empSalario;
     }
 
     public Integer getEmpId() {
@@ -166,12 +177,28 @@ public class Empleado implements Serializable {
         this.empFechaContrato = empFechaContrato;
     }
 
+    public float getEmpSalario() {
+        return empSalario;
+    }
+
+    public void setEmpSalario(float empSalario) {
+        this.empSalario = empSalario;
+    }
+
     public List<SalSalario> getSalSalarioList() {
         return salSalarioList;
     }
 
     public void setSalSalarioList(List<SalSalario> salSalarioList) {
         this.salSalarioList = salSalarioList;
+    }
+
+    public List<Planilla> getPlanillaList() {
+        return planillaList;
+    }
+
+    public void setPlanillaList(List<Planilla> planillaList) {
+        this.planillaList = planillaList;
     }
 
     public Cargo getCarId() {

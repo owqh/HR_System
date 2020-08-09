@@ -10,9 +10,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -29,7 +32,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Planilla.findAll", query = "SELECT p FROM Planilla p"),
     @NamedQuery(name = "Planilla.findByPlaId", query = "SELECT p FROM Planilla p WHERE p.plaId = :plaId"),
     @NamedQuery(name = "Planilla.findByPlaCodigo", query = "SELECT p FROM Planilla p WHERE p.plaCodigo = :plaCodigo"),
-    @NamedQuery(name = "Planilla.findByPlaSalario", query = "SELECT p FROM Planilla p WHERE p.plaSalario = :plaSalario"),
+    @NamedQuery(name = "Planilla.findByPlaSalarioNeto", query = "SELECT p FROM Planilla p WHERE p.plaSalarioNeto = :plaSalarioNeto"),
     @NamedQuery(name = "Planilla.findByPlaHorasExtras", query = "SELECT p FROM Planilla p WHERE p.plaHorasExtras = :plaHorasExtras"),
     @NamedQuery(name = "Planilla.findByPlaAfpPatronal", query = "SELECT p FROM Planilla p WHERE p.plaAfpPatronal = :plaAfpPatronal"),
     @NamedQuery(name = "Planilla.findByPlaAfpLaboral", query = "SELECT p FROM Planilla p WHERE p.plaAfpLaboral = :plaAfpLaboral"),
@@ -39,8 +42,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Planilla.findByPlaDescuentos", query = "SELECT p FROM Planilla p WHERE p.plaDescuentos = :plaDescuentos"),
     @NamedQuery(name = "Planilla.findByPlaTotalPagar", query = "SELECT p FROM Planilla p WHERE p.plaTotalPagar = :plaTotalPagar"),
     @NamedQuery(name = "Planilla.findByPlaFechaInicio", query = "SELECT p FROM Planilla p WHERE p.plaFechaInicio = :plaFechaInicio"),
-    @NamedQuery(name = "Planilla.findByPlaFechaFin", query = "SELECT p FROM Planilla p WHERE p.plaFechaFin = :plaFechaFin"),
-    @NamedQuery(name = "Planilla.findByEmpId", query = "SELECT p FROM Planilla p WHERE p.empId = :empId")})
+    @NamedQuery(name = "Planilla.findByPlaFechaFin", query = "SELECT p FROM Planilla p WHERE p.plaFechaFin = :plaFechaFin")})
 public class Planilla implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,25 +54,32 @@ public class Planilla implements Serializable {
     @Basic(optional = false)
     @Column(name = "PLA_CODIGO", nullable = false, length = 6)
     private String plaCodigo;
+    @Basic(optional = false)
+    @Column(name = "PLA_SALARIO_NETO", nullable = false)
+    private float plaSalarioNeto;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "PLA_SALARIO", precision = 12, scale = 0)
-    private Float plaSalario;
     @Column(name = "PLA_HORAS_EXTRAS", precision = 12, scale = 0)
     private Float plaHorasExtras;
-    @Column(name = "PLA_AFP_PATRONAL", precision = 12, scale = 0)
-    private Float plaAfpPatronal;
-    @Column(name = "PLA_AFP_LABORAL", precision = 12, scale = 0)
-    private Float plaAfpLaboral;
-    @Column(name = "PLA_ISSS_PATRONAL", precision = 12, scale = 0)
-    private Float plaIsssPatronal;
-    @Column(name = "PLA_ISSS_LABORAL", precision = 12, scale = 0)
-    private Float plaIsssLaboral;
-    @Column(name = "PLA_RENTA", precision = 12, scale = 0)
-    private Float plaRenta;
+    @Basic(optional = false)
+    @Column(name = "PLA_AFP_PATRONAL", nullable = false)
+    private float plaAfpPatronal;
+    @Basic(optional = false)
+    @Column(name = "PLA_AFP_LABORAL", nullable = false)
+    private float plaAfpLaboral;
+    @Basic(optional = false)
+    @Column(name = "PLA_ISSS_PATRONAL", nullable = false)
+    private float plaIsssPatronal;
+    @Basic(optional = false)
+    @Column(name = "PLA_ISSS_LABORAL", nullable = false)
+    private float plaIsssLaboral;
+    @Basic(optional = false)
+    @Column(name = "PLA_RENTA", nullable = false)
+    private float plaRenta;
     @Column(name = "PLA_DESCUENTOS", precision = 12, scale = 0)
     private Float plaDescuentos;
-    @Column(name = "PLA_TOTAL_PAGAR", precision = 12, scale = 0)
-    private Float plaTotalPagar;
+    @Basic(optional = false)
+    @Column(name = "PLA_TOTAL_PAGAR", nullable = false)
+    private float plaTotalPagar;
     @Basic(optional = false)
     @Column(name = "PLA_FECHA_INICIO", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -79,8 +88,9 @@ public class Planilla implements Serializable {
     @Column(name = "PLA_FECHA_FIN", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date plaFechaFin;
-    @Column(name = "EMP_ID")
-    private Integer empId;
+    @JoinColumn(name = "EMP_ID", referencedColumnName = "EMP_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Empleado empId;
 
     public Planilla() {
     }
@@ -89,9 +99,16 @@ public class Planilla implements Serializable {
         this.plaId = plaId;
     }
 
-    public Planilla(Integer plaId, String plaCodigo, Date plaFechaInicio, Date plaFechaFin) {
+    public Planilla(Integer plaId, String plaCodigo, float plaSalarioNeto, float plaAfpPatronal, float plaAfpLaboral, float plaIsssPatronal, float plaIsssLaboral, float plaRenta, float plaTotalPagar, Date plaFechaInicio, Date plaFechaFin) {
         this.plaId = plaId;
         this.plaCodigo = plaCodigo;
+        this.plaSalarioNeto = plaSalarioNeto;
+        this.plaAfpPatronal = plaAfpPatronal;
+        this.plaAfpLaboral = plaAfpLaboral;
+        this.plaIsssPatronal = plaIsssPatronal;
+        this.plaIsssLaboral = plaIsssLaboral;
+        this.plaRenta = plaRenta;
+        this.plaTotalPagar = plaTotalPagar;
         this.plaFechaInicio = plaFechaInicio;
         this.plaFechaFin = plaFechaFin;
     }
@@ -112,12 +129,12 @@ public class Planilla implements Serializable {
         this.plaCodigo = plaCodigo;
     }
 
-    public Float getPlaSalario() {
-        return plaSalario;
+    public float getPlaSalarioNeto() {
+        return plaSalarioNeto;
     }
 
-    public void setPlaSalario(Float plaSalario) {
-        this.plaSalario = plaSalario;
+    public void setPlaSalarioNeto(float plaSalarioNeto) {
+        this.plaSalarioNeto = plaSalarioNeto;
     }
 
     public Float getPlaHorasExtras() {
@@ -128,43 +145,43 @@ public class Planilla implements Serializable {
         this.plaHorasExtras = plaHorasExtras;
     }
 
-    public Float getPlaAfpPatronal() {
+    public float getPlaAfpPatronal() {
         return plaAfpPatronal;
     }
 
-    public void setPlaAfpPatronal(Float plaAfpPatronal) {
+    public void setPlaAfpPatronal(float plaAfpPatronal) {
         this.plaAfpPatronal = plaAfpPatronal;
     }
 
-    public Float getPlaAfpLaboral() {
+    public float getPlaAfpLaboral() {
         return plaAfpLaboral;
     }
 
-    public void setPlaAfpLaboral(Float plaAfpLaboral) {
+    public void setPlaAfpLaboral(float plaAfpLaboral) {
         this.plaAfpLaboral = plaAfpLaboral;
     }
 
-    public Float getPlaIsssPatronal() {
+    public float getPlaIsssPatronal() {
         return plaIsssPatronal;
     }
 
-    public void setPlaIsssPatronal(Float plaIsssPatronal) {
+    public void setPlaIsssPatronal(float plaIsssPatronal) {
         this.plaIsssPatronal = plaIsssPatronal;
     }
 
-    public Float getPlaIsssLaboral() {
+    public float getPlaIsssLaboral() {
         return plaIsssLaboral;
     }
 
-    public void setPlaIsssLaboral(Float plaIsssLaboral) {
+    public void setPlaIsssLaboral(float plaIsssLaboral) {
         this.plaIsssLaboral = plaIsssLaboral;
     }
 
-    public Float getPlaRenta() {
+    public float getPlaRenta() {
         return plaRenta;
     }
 
-    public void setPlaRenta(Float plaRenta) {
+    public void setPlaRenta(float plaRenta) {
         this.plaRenta = plaRenta;
     }
 
@@ -176,11 +193,11 @@ public class Planilla implements Serializable {
         this.plaDescuentos = plaDescuentos;
     }
 
-    public Float getPlaTotalPagar() {
+    public float getPlaTotalPagar() {
         return plaTotalPagar;
     }
 
-    public void setPlaTotalPagar(Float plaTotalPagar) {
+    public void setPlaTotalPagar(float plaTotalPagar) {
         this.plaTotalPagar = plaTotalPagar;
     }
 
@@ -200,11 +217,11 @@ public class Planilla implements Serializable {
         this.plaFechaFin = plaFechaFin;
     }
 
-    public Integer getEmpId() {
+    public Empleado getEmpId() {
         return empId;
     }
 
-    public void setEmpId(Integer empId) {
+    public void setEmpId(Empleado empId) {
         this.empId = empId;
     }
 
